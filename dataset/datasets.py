@@ -895,8 +895,6 @@ class NumpyClsDataset(Dataset):
                 while len(all_index) < self.clip_len:
                     all_index.append(all_index[-1])
 
-            buffer = np.take(vr, all_index, axis = 0)
-
         else: # handle temporal segments
             converted_len = int(self.clip_len * self.frame_sample_rate)
             seg_len = length // self.num_segment
@@ -922,9 +920,9 @@ class NumpyClsDataset(Dataset):
                 index = index + i * seg_len
                 all_index.extend(list(index))
 
-            all_index = all_index[::int(sample_rate_scale)]
+            all_index = all_index[::int(sample_rate_scale)] 
 
-            buffer = np.take(vr, all_index, axis = 0)
+        buffer = np.expand_dims(np.take(vr, all_index, axis=0), axis=-1) # make T x H x W x C == 1
 
         return buffer
 
