@@ -50,3 +50,11 @@ def get_image_loader(use_petrel_backend: bool = True,
         return img
 
     return _loader
+
+def get_numpy_loader():
+
+    def _loader(numpy_path):
+        video_np = np.load(numpy_path)
+        return video_np
+
+    return _loader
