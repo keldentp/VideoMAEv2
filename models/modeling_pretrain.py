@@ -168,7 +168,7 @@ class PretrainVisionTransformerDecoder(nn.Module):
                  cos_attn=False):
         super().__init__()
         self.num_classes = num_classes
-        assert num_classes == 3 * tubelet_size * patch_size**2
+        assert (num_classes == 3*tubelet_size*patch_size**2) or (num_classes == tubelet_size*patch_size**2) # add support for grayscale as hyperspectral bancs --> frames, channels --> 1 
         # num_features for consistency with other models
         self.num_features = self.embed_dim = embed_dim
         self.patch_size = patch_size
@@ -359,6 +359,27 @@ class PretrainVisionTransformer(nn.Module):
 
         return x
 
+@register_model
+def pretrain_videomae_small_patch16_128(pretrained=False, **kwargs):
+    model = PretrainVisionTransformer(
+        img_size=128,
+        patch_size=16,
+        encoder_embed_dim=384,
+        encoder_depth=12,
+        encoder_num_heads=6,
+        encoder_num_classes=0,
+        decoder_num_classes=256,  # 16 * 16 * 3 * 2 == 1536 ==> 16 * 16 * 1 (channels)  * 1 (tublet size)
+        decoder_embed_dim=192,
+        decoder_num_heads=3,
+        mlp_ratio=4,
+        qkv_bias=True,
+        norm_layer=partial(nn.LayerNorm, eps=1e-6),
+        **kwargs)
+    model.default_cfg = _cfg()          # TODO: check if config is applicable for our hyperspectral images
+    if pretrained:
+        checkpoint = torch.load(kwargs["init_ckpt"], map_location="cpu")
+        model.load_state_dict(checkpoint["model"])
+    return model
 
 @register_model
 def pretrain_videomae_small_patch16_224(pretrained=False, **kwargs):
