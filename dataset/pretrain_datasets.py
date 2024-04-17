@@ -177,6 +177,7 @@ class HybridVideoMAE(torch.utils.data.Dataset):
         self.orig_skip_length = self.skip_length
         
         self.video_loader = get_video_loader()
+        self.numpy_loader = get_numpy_loader()
         self.image_loader = get_image_loader()
 
         if not self.lazy_init:
@@ -194,19 +195,24 @@ class HybridVideoMAE(torch.utils.data.Dataset):
             self.new_step = self.orig_new_step
             
             if total_frame < 0:
-                decord_vr = self.video_loader(video_name)
-                duration = len(decord_vr)
+                if video_name.endswith(".npy"):
+                    decode_numpy = self.numpy_loader(video_name)
+                    duration = decode_numpy.shape[0]            # duration == bands
+                    images = [Image.fromarray([i,:,:]) for i in range(duration)]
+                else:
+                    decord_vr = self.video_loader(video_name)
+                    duration = len(decord_vr)
 
-                segment_indices, skip_offsets = self._sample_train_indices(
-                    duration)
-                frame_id_list = self.get_frame_id_list(duration,
-                                                       segment_indices,
-                                                       skip_offsets)
-                video_data = decord_vr.get_batch(frame_id_list).asnumpy()
-                images = [
-                    Image.fromarray(video_data[vid, :, :, :]).convert('RGB')
-                    for vid, _ in enumerate(frame_id_list)
-                ]
+                    segment_indices, skip_offsets = self._sample_train_indices(
+                        duration)
+                    frame_id_list = self.get_frame_id_list(duration,
+                                                        segment_indices,
+                                                        skip_offsets)
+                    video_data = decord_vr.get_batch(frame_id_list).asnumpy()
+                    images = [
+                        Image.fromarray(video_data[vid, :, :, :]).convert('RGB')
+                        for vid, _ in enumerate(frame_id_list)
+                    ]
 
             else:
                 # ssv2 & ava & other rawframe dataset

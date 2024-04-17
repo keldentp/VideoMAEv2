@@ -22,7 +22,7 @@ def build_pretraining_dataset(args):
         test_mode=False,
         name_pattern=args.fname_tmpl,
         video_ext='mp4',
-        is_color=True,
+        is_color=False,
         modality='rgb',
         num_segments=1,
         num_crop=1,
