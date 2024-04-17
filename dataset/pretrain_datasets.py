@@ -198,7 +198,7 @@ class HybridVideoMAE(torch.utils.data.Dataset):
                 if video_name.endswith(".npy"):
                     decode_numpy = self.numpy_loader(video_name)
                     duration = decode_numpy.shape[0]            # duration == bands
-                    images = [Image.fromarray([i,:,:]) for i in range(duration)]
+                    images = [Image.fromarray(decode_numpy[i,:,:]) for i in range(duration)]
                 else:
                     decord_vr = self.video_loader(video_name)
                     duration = len(decord_vr)
