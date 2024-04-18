@@ -359,11 +359,14 @@ class PretrainVisionTransformer(nn.Module):
 
         return x
 
+##############################################################################################################
+# Hyperspectral Model
 @register_model
 def pretrain_videomae_small_patch16_128(pretrained=False, **kwargs):
     model = PretrainVisionTransformer(
         img_size=128,
         patch_size=16,
+        encoder_in_chans=1,
         encoder_embed_dim=384,
         encoder_depth=12,
         encoder_num_heads=6,
@@ -380,6 +383,7 @@ def pretrain_videomae_small_patch16_128(pretrained=False, **kwargs):
         checkpoint = torch.load(kwargs["init_ckpt"], map_location="cpu")
         model.load_state_dict(checkpoint["model"])
     return model
+##############################################################################################################
 
 @register_model
 def pretrain_videomae_small_patch16_224(pretrained=False, **kwargs):

@@ -269,7 +269,6 @@ class GroupNormalize(object):
         # TODO: make efficient
         for t, m, s in zip(tensor, rep_mean, rep_std):
             t.sub_(m).div_(s)
-
         return (tensor, label)
 
 
@@ -545,7 +544,7 @@ class Stack(object):
     def __call__(self, img_tuple):
         img_group, label = img_tuple
 
-        if img_group[0].mode == 'L':
+        if img_group[0].mode == 'L' or img_group[0].mode == 'F':        # grayscale or 32bit float
             return (np.concatenate([np.expand_dims(x, 2) for x in img_group],
                                    axis=2), label)
         elif img_group[0].mode == 'RGB':

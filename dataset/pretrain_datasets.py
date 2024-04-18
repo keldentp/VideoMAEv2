@@ -22,9 +22,9 @@ from .transforms import (
 class DataAugmentationForVideoMAEv2(object):
 
     def __init__(self, args):
-        self.input_mean = [0.485, 0.456, 0.406]
-        self.input_std = [0.229, 0.224, 0.225]
-        div = True
+        self.input_mean = [0.0846267]
+        self.input_std = [0.0360021] # std err?
+        div = False
         roll = False
         normalize = GroupNormalize(self.input_mean, self.input_std)
         self.train_augmentation = GroupMultiScaleCrop(args.input_size,
@@ -253,7 +253,7 @@ class HybridVideoMAE(torch.utils.data.Dataset):
                 process_data, encoder_mask, decoder_mask = self.transform(
                     (images, None))
                 process_data = process_data.view(
-                    (self.new_length, 3) + process_data.size()[-2:]).transpose(
+                    (self.new_length, 1) + process_data.size()[-2:]).transpose(
                         0, 1)
                 process_data_list.append(process_data)
                 encoder_mask_list.append(encoder_mask)
