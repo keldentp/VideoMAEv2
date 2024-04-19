@@ -7,7 +7,7 @@
 # --------------------------------------------------------'
 import os
 
-from .datasets import RawFrameClsDataset, VideoClsDataset
+from .datasets import RawFrameClsDataset, VideoClsDataset, NumpyClsDataset
 from .pretrain_datasets import (  # noqa: F401
     DataAugmentationForVideoMAEv2, HybridVideoMAE, VideoMAE,
 )
