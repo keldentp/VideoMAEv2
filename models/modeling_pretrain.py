@@ -168,7 +168,7 @@ class PretrainVisionTransformerDecoder(nn.Module):
                  cos_attn=False):
         super().__init__()
         self.num_classes = num_classes
-        assert (num_classes == 3*tubelet_size*patch_size**2) or (num_classes == tubelet_size*patch_size**2) # add support for grayscale as hyperspectral bancs --> frames, channels --> 1 
+        assert (num_classes == 3*tubelet_size*patch_size**2) or (num_classes == tubelet_size*patch_size**2) # add support for grayscale as hyperspectral bands --> frames, channels --> 1 
         # num_features for consistency with other models
         self.num_features = self.embed_dim = embed_dim
         self.patch_size = patch_size
@@ -416,13 +416,14 @@ def pretrain_videomae_small_patch16_224(pretrained=False, **kwargs):
     model = PretrainVisionTransformer(
         img_size=224,
         patch_size=16,
-        encoder_embed_dim=384,
+        encoder_in_chans = 1,  # add for monochrome frames
+        encoder_embed_dim=256,
         encoder_depth=12,
-        encoder_num_heads=6,
+        encoder_num_heads=8,
         encoder_num_classes=0,
-        decoder_num_classes=1536,  # 16 * 16 * 3 * 2
-        decoder_embed_dim=192,
-        decoder_num_heads=3,
+        decoder_num_classes=256,  # 16 * 16 * 3 * 2 ==> 16 * 16 * 1 (channels)  * 1 (tublet size)
+        decoder_embed_dim=128,
+        decoder_num_heads=4,
         mlp_ratio=4,
         qkv_bias=True,
         norm_layer=partial(nn.LayerNorm, eps=1e-6),

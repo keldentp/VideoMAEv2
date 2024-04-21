@@ -2,6 +2,7 @@ import io
 
 import cv2
 import numpy as np
+from skimage.transform import resize
 from decord import VideoReader, cpu
 
 try:
@@ -55,6 +56,9 @@ def get_numpy_loader():
 
     def _loader(numpy_path):
         video_np = np.load(numpy_path)
-        return video_np
+        video_np = resize(video_np, (video_np.shape[0], 224, 224), preserve_range=False)  # TO RESIZE MINH'S DATA!
+        video_np = video_np.astype(np.float32)
+
+        return video_np[0:84:11,:,:] # SOME PATCHES DON'T HAVE 84 BANDS?
 
     return _loader

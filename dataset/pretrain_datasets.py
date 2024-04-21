@@ -22,8 +22,8 @@ from .transforms import (
 class DataAugmentationForVideoMAEv2(object):
 
     def __init__(self, args):
-        self.input_mean = [0.0846267]
-        self.input_std = [0.0360021] # std err?
+        self.input_mean = [0.652812]
+        self.input_std = [0.2200952] # std err? calculated with sample from 5 tissue ims
         div = False
         roll = False
         normalize = GroupNormalize(self.input_mean, self.input_std)
@@ -264,7 +264,7 @@ class HybridVideoMAE(torch.utils.data.Dataset):
                 (images, None))
             # T*C,H,W -> T,C,H,W -> C,T,H,W
             process_data = process_data.view(
-                (self.new_length, 3) + process_data.size()[-2:]).transpose(
+                (self.new_length, 1) + process_data.size()[-2:]).transpose(
                     0, 1)
             return process_data, encoder_mask, decoder_mask
 
