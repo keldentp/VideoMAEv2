@@ -10,6 +10,7 @@ from .loader import get_image_loader, get_video_loader, get_numpy_loader
 from .masking_generator import (
     RunningCellMaskingGenerator,
     TubeMaskingGenerator,
+    RandomMaskingGenerator
 )
 from .transforms import (
     GroupMultiScaleCrop,
@@ -37,6 +38,9 @@ class DataAugmentationForVideoMAEv2(object):
         ])
         if args.mask_type == 'tube':
             self.encoder_mask_map_generator = TubeMaskingGenerator(
+                args.window_size, args.mask_ratio)
+        elif args.mask_type == 'random':
+            self.encoder_mask_map_generator = RandomMaskingGenerator(
                 args.window_size, args.mask_ratio)
         else:
             raise NotImplementedError(
