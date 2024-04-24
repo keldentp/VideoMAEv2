@@ -39,7 +39,7 @@ def build_pretraining_dataset(args):
 def build_dataset(is_train, test_mode, args):
     if is_train:
         mode = 'train'
-        anno_path = os.path.join(args.data_path, 'train.csv')
+        anno_path = os.path.join(args.data_path, args.file_name)
     elif test_mode:
         mode = 'test'
         anno_path = os.path.join(args.data_path, 'val.csv')
@@ -266,8 +266,8 @@ def build_dataset(is_train, test_mode, args):
             clip_len=args.num_frames,
             frame_sample_rate=args.sampling_rate,
             num_segment=1,
-            test_num_segment=args.test_num_segment,
-            test_num_crop=args.test_num_crop,
+            # test_num_segment=args.test_num_segment,
+            # test_num_crop=args.test_num_crop,
             num_crop=1 if not test_mode else 3,
             keep_aspect_ratio=True,
             crop_size=args.input_size,
@@ -280,6 +280,6 @@ def build_dataset(is_train, test_mode, args):
         raise NotImplementedError('Unsupported Dataset')
 
     assert nb_classes == args.nb_classes
-    print("Number of the class = %d" % args.nb_classes)
+    # print("Number of the class = %d" % args.nb_classes)
 
     return dataset, nb_classes

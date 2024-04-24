@@ -661,10 +661,10 @@ class NumpyClsDataset(Dataset):
         self.aug = False
         self.rand_erase = False
 
-        if self.mode in ['train']:
-            self.aug = True
-            if self.args.reprob > 0:
-                self.rand_erase = True
+        # if self.mode in ['train']:  ## ????
+        #     self.aug = True
+        #     if self.args.reprob > 0:
+        #         self.rand_erase = True
 
         self.numpy_loader = get_numpy_loader()
 
@@ -735,8 +735,8 @@ class NumpyClsDataset(Dataset):
                     label_list.append(label)
                     index_list.append(index)
                 return frame_list, label_list, index_list, {}
-            else:
-                buffer = self._aug_frame(buffer, args)
+            # else:
+            #     buffer = self._aug_frame(buffer, args)
 
             return buffer, self.label_array[index], index, {}
 

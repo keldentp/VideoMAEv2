@@ -289,7 +289,8 @@ class PatchEmbed(nn.Module):
             stride=(self.tubelet_size, patch_size[0], patch_size[1]))
 
     def forward(self, x, **kwargs):
-        B, C, T, H, W = x.shape
+        # print(f"x shape! {x.shape}")
+        B, C, T, H, W = x.shape  # Changed from B, C, T, H, W
         assert H == self.img_size[0] and W == self.img_size[
             1], f"Input image size ({H}*{W}) doesn't match model ({self.img_size[0]}*{self.img_size[1]})."
         # b, c, l -> b, l, c
